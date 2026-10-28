@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="en"><head>
+    <!-- STREAMING_CHUNK: Setting up meta tags and Google fonts -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Rohit Shrivastava, Ph.D.</title>
+    <meta name="description" content="Notes on cell biology, neurodegeneration, and research by Rohit Shrivastava.">
+    <meta name="author" content="Rohit Shrivastava">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#07080B">
+
+    <!-- Open Graph / social preview -->
+    
+    
+    
+    
+    <!-- NOTE: set og:url / canonical below once this site has a live domain -->
+    
+    
+    
+    
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+
+    <!-- Structured data -->
+    
+
+    <!-- External Libraries & Styling Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Tailwind CSS with Custom Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                darkObsidian: '#07080B',
+                slateCard: '#12161F',
+                slateBorder: '#2B3A52',
+                bandSurface: '#0C0F16', /* alternating section band: sits between darkObsidian and slateCard */
+                accentCyan: '#38BDF8',
+                accentMint: '#34D399',
+                offWhite: '#F4F5F7',
+                brightWhite: '#FDFEFF',
+                vAmber: '#F59E0B',
+                dPurple:'#F472B6',
+                mutedSlate: '#CBD5E1', /* Slate-300: passes strict WCAG AAA guidelines (7.4:1 contrast ratio) */
+              },
+              fontFamily: {
+                serif: ['Lora', 'serif'],
+                sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                mono: ['"JetBrains Mono"', 'monospace']
+              }
+            }
+          }
+        }
+    </script>
+
+    <!-- Custom Micro-interaction Animations -->
+    <style>
+
+        .lift-panel{
+            position:relative; overflow:hidden;
+            transition:border-color .45s ease, box-shadow .45s ease;
+        }
+        .lift-panel::before{
+            content:""; position:absolute; left:0; top:0; height:2px; width:0;
+            background:linear-gradient(90deg,#38BDF8,#34D399);
+            transition:width .6s cubic-bezier(.16,1,.3,1);
+            z-index:2; pointer-events:none;
+        }
+        .lift-panel:hover{ border-color:rgba(56,189,248,.28); box-shadow:0 20px 46px rgba(0,0,0,.45); }
+        .lift-panel:hover::before{ width:100%; }
+
+        /* --- Shared card motion (same easing signature as the ladder tabs) --- */
+        .lift-card{
+            position: relative;
+            overflow: hidden;
+            transition: transform .45s cubic-bezier(.16,1,.3,1),
+                        box-shadow .45s ease,
+                        border-color .45s ease,
+                        background-color .45s ease,
+                        color .35s ease;
+        }
+        .lift-card::before{
+            content:""; position:absolute; left:0; top:0; height:2px; width:0;
+            background:linear-gradient(90deg,#38BDF8,#34D399);
+            transition:width .5s cubic-bezier(.16,1,.3,1);
+            z-index:2; pointer-events:none;
+        }
+        .lift-card:hover::before{ width:100%; }
+        .lift-card:hover{
+            transform: translateY(-5px);
+            box-shadow: 0 20px 46px rgba(0,0,0,.5);
+            border-color: rgba(56,189,248,.35);
+        }
+        @media (prefers-reduced-motion: reduce){
+            .lift-card, .lift-card::before{ transition:none; }
+            .lift-card:hover{ transform:none; }
+        }
+
+        /* --- Technical capability cards --- */
+        .cap-card{
+            position:relative; overflow:hidden;
+            transition:transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s ease, border-color .45s ease;
+        }
+        .cap-card::before{
+            content:""; position:absolute; left:0; top:0; height:2px; width:0;
+            background:linear-gradient(90deg,#38BDF8,#34D399);
+            transition:width .5s cubic-bezier(.16,1,.3,1);
+        }
+        .cap-card:hover{
+            transform:translateY(-6px);
+            box-shadow:0 24px 52px rgba(0,0,0,.55);
+            border-color:rgba(56,189,248,.35);
+        }
+        .cap-card:hover::before{ width:100%; }
+        .cap-ic{ transition:background .4s ease, border-color .4s ease; }
+        .cap-card:hover .cap-ic{ background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.32); }
+        @media (prefers-reduced-motion: reduce){
+            .cap-card, .cap-card::before, .cap-ic{ transition:none; }
+            .cap-card:hover{ transform:none; }
+        }
+
+        /* --- Cross-organism validation ladder (interactive tabs) --- */
+        .rung-btn{
+            position:relative; overflow:hidden;
+            display:flex; align-items:center; gap:14px; width:100%; text-align:left;
+            padding:16px 18px; border-radius:12px; border:1px solid transparent;
+            background:transparent; color:inherit; font:inherit; cursor:pointer;
+            transition:background .35s ease, border-color .35s ease, transform .35s cubic-bezier(.16,1,.3,1);
+        }
+        .rung-btn::before{
+            content:""; position:absolute; left:0; top:0; height:2px; width:0;
+            background:linear-gradient(90deg,#38BDF8,#34D399);
+            transition:width .5s cubic-bezier(.16,1,.3,1);
+            z-index:2; pointer-events:none;
+        }
+        .rung-btn:hover::before,
+        .rung-btn[aria-selected="true"]::before{ width:100%; }
+        .rung-btn:hover{ background:#12161F; border-color:#2B3A52; }
+        .rung-btn[aria-selected="true"]{
+            background:#12161F; border-color:rgba(56,189,248,.45);
+            box-shadow:0 14px 34px rgba(0,0,0,.5), 0 0 0 1px rgba(56,189,248,.07);
+            transform:translateX(4px);
+        }
+        .rung-idx{
+            flex:0 0 auto; width:34px; height:34px; border-radius:9px;
+            display:grid; place-items:center; font-size:12px; font-weight:700;
+            background:#07080B; border:1px solid #2B3A52; color:#CBD5E1; transition:.35s ease;
+        }
+        .rung-btn[aria-selected="true"] .rung-idx{
+            background:#38BDF8; border-color:#38BDF8; color:#07080B;
+            box-shadow:0 6px 18px rgba(56,189,248,.4);
+        }
+        .rung-pane{ display:none; }
+        .rung-pane.is-active{ display:block; animation:paneIn .45s cubic-bezier(.16,1,.3,1); }
+        @keyframes paneIn{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;} }
+        @media (prefers-reduced-motion: reduce){
+            .rung-btn, .rung-idx, .rung-btn::before, .lift-panel, .lift-panel::before{ transition:none; }
+            .rung-btn[aria-selected="true"]{ transform:none; }
+            .rung-pane.is-active{ animation:none; }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.08); }
+            50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.2); }
+        }
+        .glow-card {
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+        .timeline-line {
+            background: linear-gradient(to bottom, #38BDF8 0%, #2B3A52 100%);
+        }
+        /* Custom Scrollbar for premium feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #07080B;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2B3A52;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38BDF8;
+        }
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 6rem; /* header is 5rem; anchors land 1rem below it */
+        }
+        body { scroll-padding-top: 6rem; } /* covers the case where body is the scroll container */
+
+        /* Full-bleed alternating band: background extends to the viewport edges
+           even though the section itself is max-width constrained */
+        .band{
+            background-color:#0C0F16;
+            box-shadow:0 0 0 100vmax #0C0F16;
+            clip-path:inset(0 -100vmax);
+        }
+
+        /* Mobile navigation panel */
+        #mobileNav[hidden]{ display:none; }
+        #mobileNav{ animation:navIn .25s cubic-bezier(.16,1,.3,1); }
+        @keyframes navIn{ from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:none;} }
+        @media (prefers-reduced-motion: reduce){ #mobileNav{ animation:none; } }
+
+        /* Consistent, visible keyboard focus state across all interactive elements */
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+            outline: 2px solid #38BDF8;
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* Scroll-reveal (disabled entirely for users who prefer reduced motion) */
+        @media (prefers-reduced-motion: no-preference) {
+            .reveal, .reveal-item {
+                opacity: 0;
+                transform: translateY(28px);
+                transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .reveal.is-visible, .reveal-item.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+<style>
+.portfolio-arc-portrait{position:relative;width:420px;max-width:100%;padding:0 0 30px 24px;isolation:isolate}
+.portfolio-arc-portrait::before{content:"";position:absolute;inset:30px 0 0;background:#162832;border-radius:48% 48% 3px 3px;z-index:-1}
+.portfolio-arc-frame{width:100%;height:510px;overflow:hidden;border-radius:48% 48% 3px 3px;box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.portfolio-arc-frame>img{width:100%;height:100%;object-fit:cover;object-position:center 35%}
+.portfolio-arc-tag{position:absolute;bottom:52px;left:0;z-index:1;background:#193a31;color:#fff;padding:20px 25px;box-shadow:0 8px 24px #0003}
+.portfolio-arc-tag span{font-size:8px;letter-spacing:.16em;color:#b4cbbd}
+.portfolio-arc-tag p{font-family:Lora,Georgia,serif;font-size:19px;line-height:1.4;margin:9px 0 0}
+.portfolio-arc-index{position:absolute;right:0;bottom:0;font-size:8px;letter-spacing:.16em;color:#CBD5E1}
+@media(min-width:768px) and (max-width:1023px){.portfolio-arc-portrait{width:330px}.portfolio-arc-frame{height:460px}}
+@media(max-width:767px){.portfolio-arc-portrait{width:100%;max-width:440px;align-self:center}.portfolio-arc-frame{height:440px}}
+</style>
+<style>header nav.hidden.lg\:flex{gap:1rem}@media(min-width:1024px) and (max-width:1279px){header nav.hidden.lg\:flex{display:none}#mobileNavToggle{display:flex}#mobileNav:not([hidden]){display:block}}</style></head><body><header class="sticky top-0 z-50 backdrop-blur-xl bg-darkObsidian/85 border-b border-slateBorder/40 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex justify-between items-center gap-3">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <span class="w-8 h-8 rounded-lg bg-gradient-to-tr from-accentCyan to-accentMint flex items-center justify-center font-mono font-bold text-darkObsidian text-sm tracking-tighter">
+                    RS
+                </span>
+                <span class="font-mono tracking-wider sm:tracking-widest text-[10px] sm:text-xs font-bold text-accentCyan group-hover:text-offWhite transition-colors duration-300">ROHIT SHRIVASTAVA, Ph.D.</span>
+            </a>
+
+            <!-- Nav Links -->
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="index.html#trajectory-narrative" class="text-xs font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan transition-all">Trajectory</a>
+                <a href="index.html#capability" class="text-xs font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan transition-all">Capability</a>
+                <a href="index.html#expertise" class="text-xs font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan transition-all">Platform</a>
+                <a href="index.html#simulator" class="text-xs font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan transition-all flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-accentMint animate-ping"></span>
+                    Lab Sandbox
+                </a>
+                <a href="index.html#timeline" class="text-xs font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan transition-all">Timeline</a>
+                <a href="blog.html" aria-current="page" class="text-xs font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan">Blog</a><a href="index.html#publications" class="text-xs font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan transition-all">Publications</a>
+                <a href="index.html#contact" class="text-xs font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan transition-all">Contact</a>
+            </nav>
+
+            <!-- Utility Controls: CV download, collaborate, mobile menu -->
+            <div class="flex items-center gap-2 sm:gap-4">
+                <!-- TODO: place the PDF at this path (or update href) before deploying -->
+                <a href="assets/cv/Rohit_Shrivastava_CV.pdf" download class="px-3 py-2 rounded-lg bg-slateCard border border-slateBorder hover:border-accentCyan/50 text-mutedSlate hover:text-accentCyan transition-all text-xs font-mono tracking-wider flex items-center gap-1.5" aria-label="Download CV (PDF)">
+                    <span class="material-icons text-base" aria-hidden="true">download</span>
+                    <span>CV</span>
+                </a>
+                <a href="index.html#contact" class="hidden sm:inline-flex px-4 py-2 rounded-lg bg-gradient-to-r from-accentCyan/20 to-accentCyan/10 border border-accentCyan/40 hover:border-accentCyan text-accentCyan text-xs font-mono tracking-wider transition-all">
+                    COLLABORATE
+                </a>
+                <button id="mobileNavToggle" type="button" class="lg:hidden p-2 rounded-lg border border-slateBorder text-mutedSlate hover:text-accentCyan hover:border-accentCyan/50 transition-all flex items-center" aria-controls="mobileNav" aria-expanded="false" aria-label="Open menu">
+                    <span class="material-icons" aria-hidden="true">menu</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile navigation (below lg) -->
+        <nav id="mobileNav" class="lg:hidden border-t border-slateBorder/60 bg-darkObsidian/95" aria-label="Mobile" hidden>
+            <ul class="max-w-7xl mx-auto px-4 sm:px-6 py-3 grid gap-1">
+                <li><a href="index.html#trajectory-narrative" class="block px-3 py-3 rounded-lg text-sm font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan hover:bg-slateCard">Trajectory</a></li>
+                <li><a href="index.html#capability" class="block px-3 py-3 rounded-lg text-sm font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan hover:bg-slateCard">Capability</a></li>
+                <li><a href="index.html#expertise" class="block px-3 py-3 rounded-lg text-sm font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan hover:bg-slateCard">Platform</a></li>
+                <li><a href="index.html#simulator" class="block px-3 py-3 rounded-lg text-sm font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan hover:bg-slateCard">Lab Sandbox</a></li>
+                <li><a href="index.html#timeline" class="block px-3 py-3 rounded-lg text-sm font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan hover:bg-slateCard">Timeline</a></li>
+                <li><a href="blog.html" aria-current="page" class="block px-3 py-3 text-sm font-mono text-mutedSlate hover:text-accentCyan">Blog</a></li><li><a href="index.html#publications" class="block px-3 py-3 rounded-lg text-sm font-mono uppercase tracking-wider text-mutedSlate hover:text-accentCyan hover:bg-slateCard">Publications</a></li>
+                <li><a href="index.html#contact" class="block px-3 py-3 rounded-lg text-sm font-mono uppercase tracking-wider text-accentCyan hover:bg-slateCard">Contact / Collaborate</a></li>
+            </ul>
+        </nav>
+    </header><style>
+body{margin:0;background:#07080b;color:#f4f5f7;font-family:'Plus Jakarta Sans',sans-serif}.blog{max-width:1152px;margin:auto;padding:64px 24px 100px;min-height:calc(100vh - 200px)}.back{display:inline-block;color:#cbd5e1;font-size:12px;margin-bottom:60px}.eyebrow{font:11px 'JetBrains Mono',monospace;letter-spacing:.18em;color:#38bdf8;text-transform:uppercase}.blog h1{font:400 clamp(48px,7vw,88px)/1.15 Lora,Georgia,serif;letter-spacing:-.045em;margin:22px 0 24px}.intro{max-width:620px;color:#cbd5e1;font-size:18px;line-height:1.8}.topics{display:flex;flex-wrap:wrap;gap:10px;margin:32px 0 60px}.topics span{border:1px solid #2b3a52;border-radius:999px;padding:8px 14px;font-size:11px;color:#cbd5e1}.posts{border-top:1px solid #2b3a52;padding-top:28px}.posts>h2{font:11px 'JetBrains Mono',monospace;letter-spacing:.12em;color:#cbd5e1;text-transform:uppercase}.empty{margin-top:24px;border:1px solid #2b3a52;border-radius:18px;padding:clamp(28px,5vw,60px);background:radial-gradient(ellipse at top right,#38bdf80d,transparent 65%),#0c0f16;display:flex;align-items:center;justify-content:space-between;gap:32px}.empty h3{font:400 clamp(26px,4vw,36px) Lora,Georgia,serif;margin:0 0 16px}.empty p{max-width:550px;font-size:15px;line-height:1.85;color:#cbd5e1}.research{display:inline-block;white-space:nowrap;padding:14px 19px;border:1px solid #38bdf860;border-radius:8px;color:#38bdf8;font-size:12px}.research:hover{background:#38bdf810}.blog-footer{max-width:1104px;margin:auto;padding:28px 0 36px;border-top:1px solid #2b3a52;display:flex;justify-content:space-between;gap:20px;font-size:11px;color:#cbd5e1}a[aria-current=page]{color:#38bdf8}a:focus-visible{outline:2px solid #38bdf8;outline-offset:4px}@media(max-width:767px){.blog{padding-top:40px;padding-bottom:64px}.back{margin-bottom:44px}.intro{font-size:16px}.topics{margin-bottom:40px}.empty{flex-direction:column;align-items:flex-start}.blog-footer{margin:0 24px;flex-direction:column}}
+</style>
+<main class="blog" id="main-content">
+<a class="back" href="index.html">&larr; Back to portfolio</a>
+<p class="eyebrow">Beyond the papers</p>
+<h1>Notes from the lab.</h1>
+<p class="intro">A space for writing about cell biology, neurodegeneration, and the questions that come up along the way.</p>
+<div class="topics" aria-label="Blog topics"><span>Cell biology</span><span>Neurodegeneration</span><span>Research life</span></div>
+<section class="posts" aria-labelledby="latest-posts"><h2 id="latest-posts">Latest posts</h2>
+<article class="empty" aria-labelledby="post-1-title"><div><p class="eyebrow" style="margin-bottom:16px">01 / Research life</p><h3 id="post-1-title"><a href="my-phd-experience.html">My PhD Experience</a></h3><p>A personal account of the ups and downs of my PhD, from experiments that stopped working and difficult reviews to finding my independence as a researcher.</p><p style="font-size:12px;margin-top:16px">Rohit Shrivastava &middot; 8 min read</p></div><a class="research" href="my-phd-experience.html">Read the story &rarr;</a></article><article class="empty" aria-labelledby="post-2-title"><div><p class="eyebrow" style="margin-bottom:16px">02 / Research careers</p><h3 id="post-2-title"><a href="how-to-find-a-phd.html">How to Find a PhD</a></h3><p>Seven steps for finding a PhD, from choosing a topic and researching labs to applications, interviews, and preparing for the move.</p><p style="font-size:12px;margin-top:16px">Rohit Shrivastava &middot; 7 min read</p></div><a class="research" href="how-to-find-a-phd.html">Read the guide &rarr;</a></article><article class="empty" aria-labelledby="post-3-title"><div><p class="eyebrow" style="margin-bottom:16px">03 / Research careers</p><h3 id="post-3-title"><a href="finding-a-postdoctoral-position.html">Finding a Postdoctoral Position</a></h3><p>Choosing a postdoc, finding the right lab, writing an application, and thinking about what you want to learn along the way.</p><p style="font-size:12px;margin-top:16px">Rohit Shrivastava &middot; 7 min read</p></div><a class="research" href="finding-a-postdoctoral-position.html">Read the story &rarr;</a></article><article class="empty" aria-labelledby="post-4-title"><div><p class="eyebrow" style="margin-bottom:16px">04 / Research life</p><h3 id="post-4-title"><a href="moving-to-france-for-postdoc.html">Moving to France for Postdoc position</a></h3><p>From stepping into a new research field and interviewing for a postdoc to navigating visa formalities and arriving in Montpellier.</p><p style="font-size:12px;margin-top:16px">Rohit Shrivastava &middot; 3 min read</p></div><a class="research" href="moving-to-france-for-postdoc.html">Read the story &rarr;</a></article><article class="empty" aria-labelledby="post-5-title"><div><p class="eyebrow" style="margin-bottom:16px">05 / Fellowship applications</p><h3 id="post-5-title"><a href="applying-for-humboldt-postdoctoral-fellowship.html">Applying for Alexander von Humboldt (AvH) postdoctoral fellowship</a></h3><p>My experience applying for a Humboldt fellowship, from visiting a prospective host in Germany to writing the proposal and receiving the decision.</p><p style="font-size:12px;margin-top:16px">Rohit Shrivastava &middot; 5 min read</p></div><a class="research" href="applying-for-humboldt-postdoctoral-fellowship.html">Read the story &rarr;</a></article><article class="empty" aria-labelledby="post-6-title"><div><p class="eyebrow" style="margin-bottom:16px">06 / Research life</p><h3 id="post-6-title"><a href="lockdown-in-france.html">Lockdown in France</a></h3><p>Living through lockdown in Montpellier, finding a routine, reconnecting with family, and planning research in a new country.</p><p style="font-size:12px;margin-top:16px">Rohit Shrivastava &middot; 2 min read</p></div><a class="research" href="lockdown-in-france.html">Read the story &rarr;</a></article><article class="empty" aria-labelledby="post-7-title"><div><p class="eyebrow" style="margin-bottom:16px">07 / Fellowship applications</p><h3 id="post-7-title"><a href="embo-long-term-fellowship.html">EMBO Long-Term Fellowship</a></h3><p>Preparing an EMBO fellowship application, choosing referees, and turning a research plan into a proposal after lockdown.</p><p style="font-size:12px;margin-top:16px">Rohit Shrivastava &middot; 5 min read</p></div><a class="research" href="embo-long-term-fellowship.html">Read the story &rarr;</a></article><article class="empty" aria-labelledby="post-8-title"><div><p class="eyebrow" style="margin-bottom:16px">08 / Fellowship applications</p><h3 id="post-8-title"><a href="applying-for-msca-individual-fellowship.html">Applying for Marie Skłodowska-Curie Individual Fellowship</a></h3><p>My guide to the 2020 MSCA Individual Fellowship application, covering administrative forms, Excellence, Impact, Implementation, and example work plans.</p><p style="font-size:12px;margin-top:16px">Rohit Shrivastava &middot; 15 min read</p></div><a class="research" href="applying-for-msca-individual-fellowship.html">Read the guide &rarr;</a></article></section>
+</main>
+<footer class="blog-footer"><p>&copy; 2026 Rohit Shrivastava, Ph.D.</p><a href="mailto:Rohit.Shrivastava@port.lukasiewicz.gov.pl">Get in touch &rarr;</a></footer>
+<script>
+const toggle=document.getElementById('mobileNavToggle');const menu=document.getElementById('mobileNav');function closeMenu(){menu.hidden=true;toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open menu');}toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';menu.hidden=!open;toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close menu':'Open menu');});document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!menu.hidden){closeMenu();toggle.focus();}});menu.addEventListener('click',event=>{if(event.target.closest('a'))closeMenu();});
+</script></body></html>
